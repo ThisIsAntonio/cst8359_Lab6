@@ -9,5 +9,6 @@
     <WebStackScaffolding_IsReferencingScriptLibrariesSelected>True</WebStackScaffolding_IsReferencingScriptLibrariesSelected>
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_DbContextTypeFullName>Lab6.Data.PredictionDataContext</WebStackScaffolding_DbContextTypeFullName>
+    <NameOfLastUsedPublishProfile>D:\AC\Level6\CST8359\Lab6\Lab6\Properties\PublishProfiles\marcosa-lab6 - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
