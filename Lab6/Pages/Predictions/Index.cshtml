@@ -2,10 +2,10 @@
 @model Lab6.Pages.Predictions.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Predictions Page";
 }
 
-<h1>Index</h1>
+<h1>Predictions Table</h1>
 
 <p>
     <a asp-page="Create">Create New</a>
@@ -31,15 +31,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.FileName)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Url)
-            </td>
+                <td>
+                    <img src="@item.Url" alt="Prediction Image" class="prediction-image" />
+                </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.Question)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.PredictionId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.PredictionId">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.PredictionId">Delete</a>
             </td>
         </tr>

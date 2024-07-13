@@ -9,7 +9,6 @@ namespace Lab6.Models
         [Required]
         public string FileName { get; set; }
 
-        [Required]
         public string Url { get; set; }
 
         [Required]

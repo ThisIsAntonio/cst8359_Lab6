@@ -8,17 +8,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Lab6.Data;
 using Lab6.Models;
 using Azure.Storage.Blobs;
+using System.ComponentModel.DataAnnotations;
 
 namespace Lab6.Pages.Predictions
 {
     public class CreateModel : PageModel
     {
-        private readonly Lab6.Data.PredictionDataContext _context;
+        private readonly PredictionDataContext _context;
         private readonly BlobServiceClient _blobServiceClient;
         private readonly string earthContainerName = "earthimages";
         private readonly string computerContainerName = "computerimages";
 
-        public CreateModel(Lab6.Data.PredictionDataContext context, BlobServiceClient blobServiceClient)
+        public CreateModel(PredictionDataContext context, BlobServiceClient blobServiceClient)
         {
             _context = context;
             _blobServiceClient = blobServiceClient;
@@ -26,6 +27,7 @@ namespace Lab6.Pages.Predictions
 
         public IActionResult OnGet()
         {
+            QuestionOptions = new SelectList(Enum.GetValues(typeof(Question)).Cast<Question>());
             return Page();
         }
 
@@ -33,28 +35,32 @@ namespace Lab6.Pages.Predictions
         public Prediction Prediction { get; set; } = default!;
 
         [BindProperty]
-        public IFormFile File { get; set; }
+        [Display(Name = "Upload File")]
+        public IFormFile UploadFile { get; set; }
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        public SelectList QuestionOptions { get; set; }
+
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (UploadFile != null)
             {
-                return Page();
-            }
+                var blobContainerClient = _blobServiceClient.GetBlobContainerClient(Prediction.Question == Question.Earth ? earthContainerName : computerContainerName);
+                await blobContainerClient.CreateIfNotExistsAsync();
 
-            if (File != null)
-            {
-                var containerName = Prediction.Question == Question.Earth ? earthContainerName : computerContainerName;
-                var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
-                var blobClient = containerClient.GetBlobClient(File.FileName);
+                var blobClient = blobContainerClient.GetBlobClient(Guid.NewGuid().ToString() + "-" + UploadFile.FileName);
 
-                using (var stream = File.OpenReadStream())
+                using (var stream = UploadFile.OpenReadStream())
                 {
                     await blobClient.UploadAsync(stream, true);
                 }
-
                 Prediction.Url = blobClient.Uri.ToString();
+            }
+
+            // Removing URL validation error manually if URL is set
+            if (!ModelState.IsValid)
+            {
+                QuestionOptions = new SelectList(Enum.GetValues(typeof(Question)).Cast<Question>());
+                return Page();
             }
 
             _context.Predictions.Add(Prediction);
@@ -62,5 +68,6 @@ namespace Lab6.Pages.Predictions
 
             return RedirectToPage("./Index");
         }
+
     }
 }

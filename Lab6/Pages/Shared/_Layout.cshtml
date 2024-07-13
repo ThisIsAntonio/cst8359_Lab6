@@ -1,13 +1,32 @@
 ﻿<!DOCTYPE html>
-
 <html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-</head>
-<body>
-    <div>
-        @RenderBody()
-    </div>
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>@ViewBag.Title</title>
+        <link rel="stylesheet" type="text/css" href="~/css/StyleSheet.css" />
+    </head>
+    <body>
+        <header>
+            <h1>@ViewData["Title"]</h1>
+            <nav>
+                <a asp-page="/Index">Home</a>
+                <a asp-page="/Predictions/Index">Predictions</a>
+            </nav>
+        </header>
+        <div class="container">
+            @RenderBody()
+        </div>
+        <footer>
+            <div class="footer-content">
+                <p>
+                    Developed by Marcos Astudillo for CST8359 Lab 6   Student ID: 041057439   astu0002@algonquinlive.com  &copy; @DateTime.Now.Year - Lab 6
+                </p>
+            </div>
+        </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+    @RenderSection("Scripts", required: false)
+    </body>
 </html>

@@ -2,46 +2,48 @@
 @model Lab6.Pages.Predictions.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Prediction";
 }
 
-<h1>Create</h1>
-
-<h4>Prediction</h4>
+<h1>Create a new Prediction</h1>
+<br />
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <br /><br />
         <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label asp-for="Prediction.FileName" class="control-label"></label>
-                <input asp-for="Prediction.FileName" class="form-control" />
-                <span asp-validation-for="Prediction.FileName" class="text-danger"></span>
+                <div class="col-sm-10">
+                    <input asp-for="Prediction.FileName" class="form-control" />
+                    <span asp-validation-for="Prediction.FileName" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="File" class="control-label">Upload File</label>
-                <input type="file" asp-for="File" class="form-control" />
-                <span asp-validation-for="File" class="text-danger"></span>
+            <br />
+            <div class="form-group row">
+                <label asp-for="UploadFile" class="control-label">Upload File</label>
+                <div class="col-sm-10">
+                    <input type="file" asp-for="UploadFile" class="form-control" />
+                    <span asp-validation-for="UploadFile" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Prediction.Url" class="control-label"></label>
-                <input asp-for="Prediction.Url" class="form-control" />
-                <span asp-validation-for="Prediction.Url" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <br />
+            <div class="form-group row">
                 <label asp-for="Prediction.Question" class="control-label"></label>
-                <select asp-for="Prediction.Question" class="form-control"></select>
-                <span asp-validation-for="Prediction.Question" class="text-danger"></span>
+                <div class="col-sm-10">
+                    <select asp-for="Prediction.Question" class="form-control" asp-items="Model.QuestionOptions"></select>
+                    <span asp-validation-for="Prediction.Question" class="text-danger"></span>
+                </div>
             </div>
+            <br />
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-page="Index">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {
