@@ -1,3 +1,7 @@
+using Azure.Storage.Blobs;
+using Lab6.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Lab6
 {
     public class Program
@@ -5,11 +9,36 @@ namespace Lab6
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            builder.Services.AddRazorPages();
+
+            var connection = builder.Configuration.GetConnectionString("DefaultDBConnection");
+            builder.Services.AddDbContext<PredictionDataContext>(options => options.UseSqlServer(connection));
+
+            var blobConnection = builder.Configuration.GetConnectionString("AzureBlobStorage");
+            builder.Services.AddSingleton(new BlobServiceClient(blobConnection));
+
             var app = builder.Build();
 
-            app.MapGet("/", () => "Hello World!");
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
 
             app.Run();
         }
     }
 }
+
