@@ -58,11 +58,8 @@ namespace Lab6.Pages.Predictions
                 Prediction.FileName = UploadFile.FileName;
             }
 
-            // Removing URL validation error manually if URL is set
-            ModelState.Clear();
-            TryValidateModel(Prediction);
 
-            if (!ModelState.IsValid)
+            if (TryValidateModel(Prediction))   // Check the model is valid after assigning the values
             {
                 QuestionOptions = new SelectList(Enum.GetValues(typeof(Question)).Cast<Question>());
                 return Page();
