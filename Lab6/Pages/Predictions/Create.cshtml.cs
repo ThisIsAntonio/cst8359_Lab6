@@ -19,7 +19,7 @@ namespace Lab6.Pages.Predictions
         private readonly string earthContainerName = "earthimages";
         private readonly string computerContainerName = "computerimages";
 
-        public CreateModel(PredictionDataContext context, BlobServiceClient blobServiceClient)
+        public CreateModel(PredictionDataContext context, BlobServiceClient blobServiceClient, ILogger<CreateModel> logger)
         {
             _context = context;
             _blobServiceClient = blobServiceClient;
@@ -32,7 +32,7 @@ namespace Lab6.Pages.Predictions
         }
 
         [BindProperty]
-        public Prediction Prediction { get; set; } = default!;
+        public Prediction Prediction { get; set; } = new Prediction();
 
         [BindProperty]
         [Display(Name = "Upload File")]
@@ -42,6 +42,7 @@ namespace Lab6.Pages.Predictions
 
         public async Task<IActionResult> OnPostAsync()
         {
+
             if (UploadFile != null)
             {
                 var blobContainerClient = _blobServiceClient.GetBlobContainerClient(Prediction.Question == Question.Earth ? earthContainerName : computerContainerName);
@@ -54,9 +55,13 @@ namespace Lab6.Pages.Predictions
                     await blobClient.UploadAsync(stream, true);
                 }
                 Prediction.Url = blobClient.Uri.ToString();
+                Prediction.FileName = UploadFile.FileName;
             }
 
             // Removing URL validation error manually if URL is set
+            ModelState.Clear();
+            TryValidateModel(Prediction);
+
             if (!ModelState.IsValid)
             {
                 QuestionOptions = new SelectList(Enum.GetValues(typeof(Question)).Cast<Question>());
@@ -68,6 +73,5 @@ namespace Lab6.Pages.Predictions
 
             return RedirectToPage("./Index");
         }
-
     }
 }
